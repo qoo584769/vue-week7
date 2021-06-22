@@ -118,6 +118,8 @@ export default {
       } else {
         IsNew.value = isnew;
         TempCoupon.data = item;
+        // eslint-disable-next-line radix
+        TempCoupon.data.due_date = new Date(parseInt(item.due_date)).toLocaleDateString();
       }
       ModalDOM.value.classList.add('modal-show');
     };
@@ -142,7 +144,6 @@ export default {
     };
       // 建立優惠券的API
     const AdminCreateCoupon = () => {
-      // eslint-disable-next-line radix
       TempCoupon.data.due_date = Date.parse(TempCoupon.data.due_date);
       axios.post(`${process.env.VUE_APP_ALL_APIPATH}/admin/coupon`, TempCoupon).then((
         res,
@@ -160,6 +161,7 @@ export default {
     };
       // 更新優惠券的API
     const AdminUpdateCoupon = () => {
+      TempCoupon.data.due_date = Date.parse(TempCoupon.data.due_date);
       axios.put(`${process.env.VUE_APP_ALL_APIPATH}/admin/coupon/${TempCoupon.data.id}`,
         TempCoupon).then((
         res,

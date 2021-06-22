@@ -28,6 +28,8 @@
         </template>
       </tbody>
     </table>
+
+    <pagenation :PageData="AdminPagination" @out_getdata="AdminGetProductList"></pagenation>
   </div>
 
   <!-- Button trigger modal -->
@@ -44,40 +46,44 @@
           <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"
             @click.prevent="ModalClose"></button>
         </div>
-        <div class="">
-          <label for="title" class="form-label">商品名稱</label>
-          <input type="text" id="title" class="form-control" placeholder="請輸入商品名稱"
-            v-model="TempProduct.data.title">
 
-          <label for="category" class="form-label">商品種類</label>
-          <input type="text" id="category" class="form-control" placeholder="請輸入商品種類"
-            v-model="TempProduct.data.category">
+        <div class="d-flex">
+          <div class="img-block me-3">
+            <label for="" class="">下面的選擇檔案 <br> <br> 輸入網址上傳未實作</label>
+            <input ref="file" type="file" id="file" class="" @change="UploadImg">
+            <input type="text" v-model="TempProduct.data.imageUrl" class="">
+            <img :src="TempProduct.data.imageUrl" alt="">
+          </div>
 
-          <label for="origin_price" class="form-label">打折前價格</label>
-          <input type="number" id="origin_price" class="form-control" placeholder="請輸入原價"
-            v-model.number="TempProduct.data.origin_price">
-
-          <label for="price" class="form-label">打折後價格</label>
-          <input type="number" id="price" class="form-control" placeholder="請輸入售價"
-            v-model.number="TempProduct.data.price">
-
-          <label for="unit" class="form-label">單位</label>
-          <input type="text" id="unit" class="form-control" placeholder="請輸入商品單位"
-            v-model="TempProduct.data.unit">
-
-          <label for="description" class="form-label">商品簡介</label>
-          <input type="text" id="description" class="form-control" placeholder="請輸入商品簡介"
-            v-model="TempProduct.data.description">
-
-          <label for="content" class="form-label">商品細節</label>
-          <input type="text" id="content" class="form-control" placeholder="請輸入商品詳細資訊"
-            v-model="TempProduct.data.content">
-
-          <label for="is_enabled" class="form-label">是否啟用</label>
-          <input type="text" id="is_enabled" class="form-control" placeholder="是否啟用"
-            v-model="TempProduct.data.is_enabled">
+          <div class="input-block">
+            <label for="title" class="form-label">商品名稱</label>
+            <input type="text" id="title" class="form-control" placeholder="請輸入商品名稱"
+              v-model="TempProduct.data.title">
+            <label for="category" class="form-label">商品種類</label>
+            <input type="text" id="category" class="form-control" placeholder="請輸入商品種類"
+              v-model="TempProduct.data.category">
+            <label for="origin_price" class="form-label">打折前價格</label>
+            <input type="number" id="origin_price" class="form-control" placeholder="請輸入原價"
+              v-model.number="TempProduct.data.origin_price">
+            <label for="price" class="form-label">打折後價格</label>
+            <input type="number" id="price" class="form-control" placeholder="請輸入售價"
+              v-model.number="TempProduct.data.price">
+            <label for="unit" class="form-label">單位</label>
+            <input type="text" id="unit" class="form-control" placeholder="請輸入商品單位"
+              v-model="TempProduct.data.unit">
+            <label for="description" class="form-label">商品簡介</label>
+            <input type="text" id="description" class="form-control" placeholder="請輸入商品簡介"
+              v-model="TempProduct.data.description">
+            <label for="content" class="form-label">商品細節</label>
+            <input type="text" id="content" class="form-control" placeholder="請輸入商品詳細資訊"
+              v-model="TempProduct.data.content">
+            <label for="is_enabled" class="form-label">是否啟用</label>
+            <input type="text" id="is_enabled" class="form-control" placeholder="是否啟用"
+              v-model="TempProduct.data.is_enabled">
+          </div>
 
         </div>
+
         <div class="">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
             @click.prevent="ModalClose">取消</button>
@@ -147,13 +153,18 @@ import {
 import {
   onMounted,
 } from '@vue/runtime-core';
+import pagenation from '@/components/common/pagination.vue';
 // import Modal from 'bootstrap/js/dist/modal';
 
 export default {
-
+  components: {
+    pagenation,
+  },
   setup() {
     // 抓取modal的DOM元素
     const ModalDOM = ref(null);
+    // 抓取檔案上傳DOM元素
+    const file = ref(null);
     // 判斷要新增還是編輯
     const IsNew = ref(false);
     // 存取後台商品列表的變數
@@ -180,11 +191,11 @@ export default {
       }
       ModalDOM.value.classList.add('modal-show');
     };
-    // modal關
+      // modal關
     const ModalClose = () => {
       ModalDOM.value.classList.remove('modal-show');
     };
-    // 取得後台商品列表的API
+      // 取得後台商品列表的API
     const AdminGetProductList = (page = 1) => {
       axios.get(`${process.env.VUE_APP_ALL_APIPATH}/admin/products?page=${page}`).then((
         res,
@@ -199,7 +210,7 @@ export default {
         alert(err.message);
       });
     };
-    // 建立商品的API
+      // 建立商品的API
     const AdminCreateProduct = () => {
       axios.post(`${process.env.VUE_APP_ALL_APIPATH}/admin/product`, TempProduct).then((
         res,
@@ -215,7 +226,7 @@ export default {
         alert(err.message);
       });
     };
-    // 更新商品的API
+      // 更新商品的API
     const AdminUpdateProduct = () => {
       axios.put(`${process.env.VUE_APP_ALL_APIPATH}/admin/product/${TempProduct.data.id}`,
         TempProduct).then((
@@ -232,7 +243,7 @@ export default {
         alert(err.message);
       });
     };
-    // 刪除商品的API
+      // 刪除商品的API
     const AdminDelProduct = (id) => {
       axios.delete(`${process.env.VUE_APP_ALL_APIPATH}/admin/product/${id}`).then((
         res,
@@ -247,6 +258,16 @@ export default {
         alert(err.message);
       });
     };
+      // 上傳圖片
+    const UploadImg = () => {
+      const FileLocation = file.value.files[0];
+      const NewFormData = new FormData();
+      NewFormData.append('file-to-upload', FileLocation);
+      axios.post(`${process.env.VUE_APP_ALL_APIPATH}/admin/upload`, NewFormData)
+        .then((res) => {
+          TempProduct.data.imageUrl = res.data.imageUrl;
+        });
+    };
     // modal的確定按鈕
     const BtnSubmit = () => {
       if (IsNew.value) {
@@ -260,13 +281,16 @@ export default {
     });
 
     return {
+      AdminGetProductList,
       AdminDelProduct,
       AdminProductList,
       AdminPagination,
+      UploadImg,
       BtnSubmit,
 
       TempProduct,
       ModalDOM,
+      file,
 
       ModalOpen,
       ModalClose,
@@ -300,6 +324,16 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
+  }
+
+  .img-block,
+  .input-block {
+    width: 50%;
+  }
+
+  .img-block img {
+    width: 400px;
+    height: auto;
   }
 
 </style>

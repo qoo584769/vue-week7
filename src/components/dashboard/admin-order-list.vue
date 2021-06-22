@@ -1,9 +1,9 @@
 <template>
   <div class="container m-auto position-relative">
 
-  <button type="button" class="btn btn-danger" @click.prevent="AdminDelAllOrder">
-    刪除全部訂單
-  </button>
+    <button type="button" class="btn btn-danger" @click.prevent="AdminDelAllOrder">
+      刪除全部訂單
+    </button>
 
     <table class="table">
       <thead>
@@ -33,6 +33,8 @@
         </template>
       </tbody>
     </table>
+
+    <pagenation :PageData="AdminPagination" @out_getdata="AdminGetOrderList"></pagenation>
   </div>
 
   <!-- Modal -->
@@ -47,12 +49,10 @@
         <div class="">
 
           <label for="total" class="form-label">訂單金額</label>
-          <input type="text" id="total" class="form-control"
-            v-model.number="TempOrder.data.total">
+          <input type="text" id="total" class="form-control" v-model.number="TempOrder.data.total">
 
           <label for="is_paid" class="form-label">是否付款</label>
-          <input type="text" id="is_paid" class="form-control"
-            v-model="TempOrder.data.is_paid">
+          <input type="text" id="is_paid" class="form-control" v-model="TempOrder.data.is_paid">
 
         </div>
         <div class="">
@@ -74,8 +74,12 @@ import {
 import {
   onMounted,
 } from '@vue/runtime-core';
+import pagenation from '@/components/common/pagination.vue';
 
 export default {
+  components: {
+    pagenation,
+  },
   setup() {
     // 抓取modal的DOM元素
     const ModalDOM = ref(null);
@@ -177,6 +181,7 @@ export default {
     });
 
     return {
+      AdminGetOrderList,
       AdminDelSingleOrder,
       AdminDelAllOrder,
       AdminOrderList,

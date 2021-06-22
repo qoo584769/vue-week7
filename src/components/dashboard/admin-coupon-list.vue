@@ -1,10 +1,10 @@
 <template>
 
   <div class="container m-auto position-relative">
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" @click.prevent="ModalOpen(true)">
-    建立優惠券
-  </button>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" @click.prevent="ModalOpen(true)">
+      建立優惠券
+    </button>
 
     <table class="table">
       <thead>
@@ -34,6 +34,7 @@
         </template>
       </tbody>
     </table>
+    <pagenation :PageData="AdminPagination" @out_getdata="AdminGetCouponsList"></pagenation>
   </div>
 
   <!-- Modal -->
@@ -54,13 +55,16 @@
           <input type="text" id="code" class="form-control" v-model="TempCoupon.data.code">
 
           <label for="percent" class="form-label">優惠折扣</label>
-          <input type="number" id="percent" class="form-control" min=0 v-model.number="TempCoupon.data.percent">
+          <input type="number" id="percent" class="form-control" min=0
+            v-model.number="TempCoupon.data.percent">
 
           <label for="due_date" class="form-label">到期日</label>
-          <input type="text" id="due_date" class="form-control" min=0 v-model="TempCoupon.data.due_date" placeholder="請輸入yyyy/mm/dd">
+          <input type="text" id="due_date" class="form-control" min=0
+            v-model="TempCoupon.data.due_date" placeholder="請輸入yyyy/mm/dd">
 
           <label for="is_enabled" class="form-label">是否啟用</label>
-          <input type="number" id="is_enabled" class="form-control" min=0 v-model.number="TempCoupon.data.is_enabled" placeholder="請輸入 1 表示啟用 0 表示不啟用">
+          <input type="number" id="is_enabled" class="form-control" min=0
+            v-model.number="TempCoupon.data.is_enabled" placeholder="請輸入 1 表示啟用 0 表示不啟用">
 
         </div>
         <div class="">
@@ -82,9 +86,12 @@ import {
 import {
   onMounted,
 } from '@vue/runtime-core';
+import pagenation from '@/components/common/pagination.vue';
 
 export default {
-
+  components: {
+    pagenation,
+  },
   setup() {
     // 抓取modal的DOM元素
     const ModalDOM = ref(null);
@@ -183,7 +190,7 @@ export default {
         alert(err.message);
       });
     };
-    // modal的確定按鈕
+      // modal的確定按鈕
     const BtnSubmit = () => {
       if (IsNew.value) {
         AdminCreateCoupon();
@@ -201,7 +208,9 @@ export default {
       IsNew,
       TempCoupon,
       AdminCouponList,
+      AdminPagination,
 
+      AdminGetCouponsList,
       AdminCreateCoupon,
       AdminUpdateCoupon,
       AdminDelCoupon,

@@ -64,10 +64,10 @@
               v-model="TempProduct.data.category">
             <label for="origin_price" class="form-label">打折前價格</label>
             <input type="number" id="origin_price" class="form-control" placeholder="請輸入原價"
-              v-model.number="TempProduct.data.origin_price">
+              min=0 v-model.number="TempProduct.data.origin_price">
             <label for="price" class="form-label">打折後價格</label>
             <input type="number" id="price" class="form-control" placeholder="請輸入售價"
-              v-model.number="TempProduct.data.price">
+              min=0 v-model.number="TempProduct.data.price">
             <label for="unit" class="form-label">單位</label>
             <input type="text" id="unit" class="form-control" placeholder="請輸入商品單位"
               v-model="TempProduct.data.unit">
@@ -187,7 +187,7 @@ export default {
         TempProduct.data = {};
       } else {
         IsNew.value = isnew;
-        TempProduct.data = item;
+        TempProduct.data = { ...item };
       }
       ModalDOM.value.classList.add('modal-show');
     };

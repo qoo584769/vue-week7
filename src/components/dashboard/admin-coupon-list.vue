@@ -117,7 +117,7 @@ export default {
         TempCoupon.data = {};
       } else {
         IsNew.value = isnew;
-        TempCoupon.data = item;
+        TempCoupon.data = { ...item };
         // eslint-disable-next-line radix
         TempCoupon.data.due_date = new Date(parseInt(item.due_date)).toLocaleDateString();
       }

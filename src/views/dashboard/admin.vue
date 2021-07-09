@@ -5,6 +5,7 @@
         <router-link :to="{name:'admin-order-list'}" class="btn btn-primary m-1">訂單列表</router-link>
         <router-link :to="{name:'admin-coupon-list'}" class="btn btn-primary m-1">優惠券列表</router-link>
         <router-link :to="{name:'admin-article-list'}" class="btn btn-primary m-1">文章列表</router-link>
+        <button type="button" class='btn btn-danger' @click.prevent="logout">登出</button>
         <router-view></router-view>
     </div>
 </template>
@@ -37,10 +38,25 @@ export default {
         alert(err.message);
       });
     };
+    // 登出
+    const logout = () => {
+      axios.post(`${process.env.VUE_APP_APIPATH}/logout`).then((res) => {
+        if (res.data.success) {
+          router.push({ name: 'Login' });
+        } else {
+          alert(res.data.message);
+          router.push({ name: 'Login' });
+        }
+      }).catch((err) => {
+        alert(err.message);
+      });
+    };
     onMounted(() => {
       init();
     });
-    return {};
+    return {
+      logout,
+    };
   },
 
 };
